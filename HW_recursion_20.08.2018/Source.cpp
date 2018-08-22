@@ -9,8 +9,6 @@
 
 using namespace std;
 
-// Решить все задачи с применением рекурсии :
-
 // 1.	Написать функцию, определяющую среднее арифметическое элементов
 // передаваемого ей массива.
 template<typename type>
@@ -21,75 +19,69 @@ double average(type a[], int n) {
 
 // 2.	Написать функцию, определяющую количество положительных,
 // отрицательных и нулевых элементов передаваемого ей массива.
-//template<typename type>
-//void fpmz(type b[], int n) {
-//	int p = 0, m = 0, z = 0;
-//
-//	type arr[];
-//	for (int i = 0; i < n; i++)
-//		arr[i]=b[i];
-//
-//	int size = n;
-//	int pmz = 0;
-//
-template<typename type>
-int count_pmz(type arr[], int size, int &pmz) {
+template<typename type> // case 2
+void count_pmz(type arr[], int size, int &p, int &m, int &z) {
 	if (size == 1)
 	{
 		if (arr[size - 1] < 0)
-			return pmz += 100;
+			m++;
 
 		else if (arr[size - 1] > 0)
-			return pmz += 10;
+			p++;
 
 		else if (arr[size - 1] == 0)
-			return pmz += 1;
+			z++;
 	}
 
 	else
 	{
-		if arr[size - 1] < 0)
-		return pmz + 100 + count_pmz(arr, size - 1);
-
+		if (arr[size - 1] < 0)
+		{
+			m++;
+			count_pmz(arr, size - 1, p, m, z);
+		}
 		else if (arr[size - 1] > 0)
-			return pmz + 10 + count_pmz(arr, size - 1);
-
+		{
+			p++;
+			count_pmz(arr, size - 1, p, m, z);
+		}
 		else if (arr[size - 1] == 0)
-			return pmz + 1 + count_pmz(arr, size - 1);
+		{
+			z++;
+			count_pmz(arr, size - 1, p, m, z);
+		}
 	}
 }
-//	cout << "- elements: " << pmz << endl;
-//	/*cout << "+ elements: " << p << endl;
-//	cout << "zeros: " << z << endl << endl;*/
-//}
-
-
 
 // 3.	Написать функцию, определяющую минимум и максимум(значение и номер)
 // элементов передаваемого ей массива.
-int position(int arr[], int size, int &min, int &max, int &pos_min, int pos_max) {
+// case 10
+template<typename type>
+void posMinMax(type arr[], int size) {
+	static type min = arr[0];
+	static type max = arr[0];
+	static int pos_min = 0;
+	static int pos_max = 0;
 
-	if (size == 1)
+	if (size == 0)
 	{
-		cout << min << " ," << pos_min << endl;
-		cout << max << " ," << pos_max << endl << endl;
-		return 1;
-
-		if (arr[size - 1] < min)
-		{
-			min = arr[size - 1];
-			pos_min = size - 1;
-			return position(arr, size - 1, min, max, pos_min, pos_max);
-		}
-		if (arr[size - 1] > max)
-		{
-			max = arr[size - 1];
-			pos_max = size - 1;
-			return position(arr, size - 1, min, max, pos_min, pos_max);
-		}
+		cout << "min element: " << min << ", its position: " << pos_min << endl;
+		cout << "max element: " << max << ", its position: " << pos_max << endl << endl;
+		return;
 	}
-}
 
+	if (arr[size - 1] < min)
+	{
+		min = arr[size - 1];
+		pos_min = size - 1;
+	}
+	if (arr[size - 1] > max)
+	{
+		max = arr[size - 1];
+		pos_max = size - 1;
+	}
+	posMinMax(arr, size - 1); // recursion
+}
 
 int main()
 {
@@ -111,65 +103,38 @@ int main()
 			double a[8] = { 2, 4.2, 6.4, 8, 10, 12.8, 14.5, 16 };
 
 			cout << average(a, 8) << endl << endl;
+
 		}
 		break;
 		case 2:
 		{
-			double a[7] = { 1.5, -2.5, -3.5, 4.5, 0, 6.5, 7.5 };
-			int b[] = { -1, 0, 3, 0, 5, 6, 0 };
+			int k[] = { -1, 0, 3, 0, 5, 6, 7, 0 };
+			int a = 0, b = 0, c = 0;
 
-			/*fpmz(a, 7);
-			fpmz(b, 7);*/
-			int pmz = 0;
+			count_pmz(k, 8, a, b, c);
 
-			cout << count_pmz(b, 7, pmz) << endl << endl;
+			cout << "positive elements: " << a << endl;
+			cout << "negative elements: " << b << endl;
+			cout << "zero elements: " << c << endl << endl;
+
+			int a1 = 0, b1 = 0, c1 = 0;
+			double r[7] = { 1.5, -2.5, -3.5, 4.5, 0, 6.5, 7.5 };
+
+			count_pmz(r, 7, a1, b1, c1);
+
+			cout << "positive elements: " << a1 << endl;
+			cout << "negative elements: " << b1 << endl;
+			cout << "zero elements: " << c1 << endl << endl;
 		}
 		break;
 		case 3:
 		{
-			double a[7] = { 1.5, -2.5, -3.5, 4.5, 0, 6.5, 7.5 };
-			int b[] = { -1, 0, 3, 0, 5, 6, 0 };
+			double a[7] = { 1.5, -2.5, -3.5, 4.5, 0, 8.5, 7.5 };
+			int b[] = { 1, 2, 3, 4, 5, 6, 7 };
 
-			int min = INT_MAX;
-			int max = INT_MIN;
-			int pos_min = 0;
-			int pos_max = 0;
-			cout << position(b, 7, min, max, pos_min, pos_max) << endl;
-		}
-		break;
-		case 4:
-		{
+			posMinMax(b, 7);
 
-		}
-		break;
-		case 5:
-		{
-
-		}
-		break;
-		case 6:
-		{
-
-		}
-		break;
-		case 7:
-		{
-
-		}
-		break;
-		case 8:
-		{
-
-		}
-		break;
-		case 9:
-		{
-
-		}
-		break;
-		case 10:
-		{
-
+			posMinMax(a, 7);
 		}
 		break;
 		default:
